@@ -18,4 +18,12 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        loadPaths: [path.resolve(__dirname, "src/styles")],
+        additionalData: `@use "variables" as *;`,
+      },
+    },
+  },
 });

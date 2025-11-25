@@ -1,10 +1,10 @@
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
-import "./App.css";
+import "./App.scss";
 import { Button } from "./components/ui/button";
 
-function App() {
+export const App = () => {
   const [count, setCount] = useState(0);
 
   return (
@@ -32,6 +32,4 @@ function App() {
       <Button>Hola, este es un botón</Button>
     </>
   );
-}
-
-export default App;
+};
