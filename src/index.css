@@ -6,8 +6,11 @@
 /* ====== CONFIG GLOBAL ====== */
 
 :root {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
+  /* Fuentes base */
+  --font-sans: "sofia-pro", system-ui, sans-serif;
+  --font-heading: "sofia-pro", system-ui, sans-serif;
+  --font-bookmania: "bookmania", system-ui, sans-serif;
+
   line-height: 1.5;
   font-weight: 400;
   text-rendering: optimizeLegibility;
@@ -19,31 +22,31 @@
 
   /* ===== Light theme AdPaws ===== */
   /* Colores base (hex) */
-  --background: #f5f9f2;            /* bg-soft */
-  --foreground: #4c2d22;            /* secundario */
+  --background: #f5f9f2; /* bg-soft */
+  --foreground: #1a1a1a; /* negro suave */
 
   --card: #ffffff;
-  --card-foreground: #4c2d22;
+  --card-foreground: #1a1a1a;
 
   --popover: #ffffff;
-  --popover-foreground: #4c2d22;
+  --popover-foreground: #1a1a1a;
 
-  --primary: #80af80;               /* primario */
+  --primary: #80af80; /* primario */
   --primary-foreground: #ffffff;
 
-  --secondary: #4c2d22;             /* café profesional */
+  --secondary: #4c2d22; /* café profesional */
   --secondary-foreground: #f5f9f2;
 
-  --muted: #e4f0e4;                 /* bg-muted */
-  --muted-foreground: #6b534d;
+  --muted: #e4f0e4; /* bg-muted */
+  --muted-foreground: #7e7e7e; /* gris oscuro suave */
 
-  --accent: #e4a542;                /* accent */
-  --accent-foreground: #4c2d22;
+  --accent: #e4a542; /* accent */
+  --accent-foreground: #1a1a1a;
 
-  --destructive: #ed8383;           /* alerts */
+  --destructive: #ed8383; /* alerts */
   --destructive-foreground: #ffffff;
 
-  --border: #dce8dc;                /* borde verdoso suave */
+  --border: #dce8dc; /* borde verdoso suave */
   --input: #dce8dc;
   --ring: #80af80;
 
@@ -68,7 +71,7 @@
 /* Activado con la clase .dark en <html> */
 
 .dark {
-  --background: #121613;            /* verde muy oscuro */
+  --background: #121613; /* verde muy oscuro */
   --foreground: #f5f9f2;
 
   --card: #181d19;
@@ -112,7 +115,7 @@
   --sidebar-ring: #80af80;
 }
 
-/* Enlaces básicos (si quieres mantener estilo por defecto) */
+/* Enlaces básicos */
 a {
   font-weight: 500;
   color: #4c2d22;
@@ -179,6 +182,10 @@ body {
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-sans: var(--font-sans);
+  --font-heading: var(--font-heading);
+  --font-bookmania: var(--font-bookmania);
 }
 
 /* ===== Base layer para shadcn + Tailwind ===== */
@@ -189,6 +196,6 @@ body {
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
   }
 }
