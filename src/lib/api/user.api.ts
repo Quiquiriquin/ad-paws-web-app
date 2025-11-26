@@ -8,3 +8,13 @@ export const LOGIN_MUTATION = gql`
     }
   }
 `;
+
+export const USER_QUERY = gql`
+  query User {
+    user {
+      id
+      email
+      name
+    }
+  }
+`;

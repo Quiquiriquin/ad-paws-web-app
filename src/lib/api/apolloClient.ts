@@ -1,9 +1,27 @@
-import { ApolloClient, InMemoryCache } from "@apollo/client";
-import { HttpLink } from "@apollo/client/link/http";
+import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
+import { getAccessToken } from "@/lib/auth";
+
+// HTTP connection to the API
+const httpLink = createHttpLink({
+  uri: `${import.meta.env.VITE_BACKEND_API_URL}/graphql`,
+});
+
+// Auth link to add token to headers
+const authLink = setContext((_, { headers }) => {
+  // Get the authentication token from local storage if it exists
+  const token = getAccessToken();
+
+  // Return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    },
+  };
+});
 
 export const apolloClient = new ApolloClient({
-  link: new HttpLink({
-    uri: `${import.meta.env.VITE_BACKEND_API_URL}/graphql`,
-  }),
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });

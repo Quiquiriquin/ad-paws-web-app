@@ -2,15 +2,25 @@ import { createBrowserRouter } from "react-router-dom";
 import { App } from "./App";
 import AuthenticationLayout from "./layouts/AuthenticationLayout";
 import Login from "./pages/authentication/login";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { PublicRoute } from "./components/PublicRoute";
 
 export const routes = createBrowserRouter([
   {
     path: "/",
-    Component: App,
+    element: (
+      <ProtectedRoute>
+        <App />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/auth",
-    Component: AuthenticationLayout,
+    element: (
+      <PublicRoute>
+        <AuthenticationLayout />
+      </PublicRoute>
+    ),
     children: [
       {
         path: "login",
@@ -19,3 +29,4 @@ export const routes = createBrowserRouter([
     ],
   },
 ]);
+
