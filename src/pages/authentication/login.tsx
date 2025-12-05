@@ -34,10 +34,7 @@ export default function Login() {
       if (data?.signUser) {
         try {
           // Save tokens and fetch user data
-          await login({
-            accessToken: data.signUser.accessToken,
-            refreshToken: data.signUser.refreshToken,
-          });
+          await login();
 
           // Redirect to the page they were trying to access, or home
           const from =

@@ -22,7 +22,7 @@
 
   /* ===== Light theme AdPaws ===== */
   /* Colores base (hex) */
-  --background: #f5f9f2; /* bg-soft */
+  --background: #E4F0E4; /* bg-soft */
   --foreground: #1a1a1a; /* negro suave */
 
   --card: #ffffff;
@@ -57,14 +57,15 @@
   --chart-4: #c5daef;
   --chart-5: #ed8383;
 
-  --sidebar: #f5f9f2;
-  --sidebar-foreground: #4c2d22;
-  --sidebar-primary: #80af80;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #e4a542;
-  --sidebar-accent-foreground: #4c2d22;
-  --sidebar-border: #dce8dc;
-  --sidebar-ring: #80af80;
+  --sidebar: 120 25% 59%;  /* Sage green sidebar */
+  --sidebar-background: 120 25% 59%;  /* Sage green sidebar */
+  --sidebar-foreground: 0 0% 100%;
+  --sidebar-primary: 0 0% 100%;
+  --sidebar-primary-foreground: 120 25% 59%;
+  --sidebar-accent: 120 25% 65%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-border: 120 25% 55%;
+  --sidebar-ring: 38 65% 58%;
 }
 
 /* ===== Dark theme AdPaws ===== */
@@ -174,14 +175,14 @@ body {
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
 
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar: hsl(var(--sidebar));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
 
   --font-sans: var(--font-sans);
   --font-heading: var(--font-heading);

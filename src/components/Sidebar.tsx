@@ -1,0 +1,82 @@
+import { cn } from "@/lib/utils";
+import Logo from "./Logo";
+import { Button } from "./ui/button";
+import {
+  HomeIcon,
+  LogOutIcon,
+  MenuIcon,
+  SettingsIcon,
+  UserIcon,
+  X,
+} from "lucide-react";
+import { SidebarNavLink } from "./SidebarNavLink";
+
+export default function Sidebar({
+  isCollapsed,
+  toggleSidebar,
+}: {
+  isCollapsed: boolean;
+  toggleSidebar: () => void;
+}) {
+  return (
+    <aside
+      className={cn(
+        "fixed left-0 top-0 h-full bg-sidebar border-r border-sidebar-border p-4 flex flex-col transition-all duration-300 ease-in-out z-40",
+        isCollapsed ? "w-20" : "w-64"
+      )}
+    >
+      <div className="flex items-center justify-center mb-8">
+        {/* Logo - hide when collapsed */}
+        <Logo
+          className={cn(
+            "transition-opacity duration-300",
+            isCollapsed ? "w-0 opacity-0 hidden" : "w-32 opacity-100"
+          )}
+        />
+
+        {/* Toggle Button */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={toggleSidebar}
+          className="shrink-0"
+        >
+          {isCollapsed ? (
+            <MenuIcon className="h-5 w-5" />
+          ) : (
+            <X className="h-5 w-5" />
+          )}
+        </Button>
+      </div>
+
+      {/* Sidebar content goes here */}
+      <nav className="flex-1 flex justify-between flex-col">
+        <div className="space-y-2">
+          <SidebarNavLink
+            icon={HomeIcon}
+            label="Inicio"
+            to="/inicio"
+            isCollapsed={isCollapsed}
+          />
+          <SidebarNavLink
+            icon={UserIcon}
+            label="Perfil"
+            to="/perfil"
+            isCollapsed={isCollapsed}
+          />
+          <SidebarNavLink
+            icon={SettingsIcon}
+            label="Configuración"
+            to="/configuracion"
+            isCollapsed={isCollapsed}
+          />
+        </div>
+        <SidebarNavLink
+          icon={LogOutIcon}
+          label="Cerrar sesión"
+          isCollapsed={isCollapsed}
+        />
+      </nav>
+    </aside>
+  );
+}

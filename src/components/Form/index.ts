@@ -5,4 +5,6 @@ export { FormLabel } from "./FormLabel"
 export { FormControl } from "./FormControl"
 export { FormDescription } from "./FormDescription"
 export { FormMessage } from "./FormMessage"
+export { FormSelect, type SelectOption, type SelectOptionGroup } from "./FormSelect"
+export { FormDatePicker } from "./FormDatePicker"
 

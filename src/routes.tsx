@@ -1,18 +1,33 @@
-import { createBrowserRouter } from "react-router-dom";
-import { App } from "./App";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import AuthenticationLayout from "./layouts/AuthenticationLayout";
 import Login from "./pages/authentication/login";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { PublicRoute } from "./components/PublicRoute";
+import Dashboard from "./pages/dashboard/Dashboard";
+import DashboardLayout from "./layouts/DashboardLayout";
 
 export const routes = createBrowserRouter([
   {
     path: "/",
     element: (
       <ProtectedRoute>
-        <App />
+        <Navigate to="/inicio" />
       </ProtectedRoute>
     ),
+  },
+  {
+    path: "/inicio",
+    element: (
+      <ProtectedRoute>
+        <DashboardLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        path: "",
+        Component: Dashboard,
+      },
+    ],
   },
   {
     path: "/auth",
@@ -29,4 +44,3 @@ export const routes = createBrowserRouter([
     ],
   },
 ]);
-

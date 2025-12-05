@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, USER_DATA_KEY } from "@/lib/auth";
+import { USER_DATA_KEY } from "@/lib/auth";
 import { apolloClient } from "@/lib/api/apolloClient";
 import { USER_QUERY } from "@/lib/api/user.api";
 
@@ -18,16 +18,11 @@ export interface User {
   // Add more user properties as needed
 }
 
-export interface AuthTokens {
-  accessToken: string;
-  refreshToken: string;
-}
-
 export interface AuthContextValue {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (tokens: AuthTokens, userData?: User) => void;
+  login: (userData?: User) => Promise<void>;
   logout: () => void;
   updateUser: (userData: User) => void;
   refetchUser: () => Promise<void>;
@@ -71,29 +66,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
     } catch (error) {
       console.error("Failed to fetch user data:", error);
-      // If fetch fails (e.g., token expired), clear auth data
-      localStorage.removeItem(ACCESS_TOKEN_KEY);
-      localStorage.removeItem(REFRESH_TOKEN_KEY);
+      // If fetch fails (e.g., cookie expired or invalid), clear auth data
       localStorage.removeItem(USER_DATA_KEY);
       setUser(null);
       throw error;
     }
   }, []);
 
-  // Initialize auth state from localStorage
+  // Initialize auth state by validating cookie
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
-        const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
-
-        if (accessToken && refreshToken) {
-          // Fetch user data from API
-          await fetchUserData();
-        }
+        // Try to fetch user data - if cookies are valid, this will succeed
+        await fetchUserData();
       } catch (error) {
         console.error("Failed to initialize auth:", error);
-        // Already handled in fetchUserData
+        // Cookie is invalid or expired, user is not authenticated
       } finally {
         setIsLoading(false);
       }
@@ -102,38 +90,29 @@ export function AuthProvider({ children }: AuthProviderProps) {
     initializeAuth();
   }, [fetchUserData]);
 
-  // Login function
+  // Login function - cookies are set by the server
   const login = useCallback(
-    async (tokens: AuthTokens, userData?: User) => {
+    async (userData?: User) => {
       try {
-        // Store tokens
-        localStorage.setItem(ACCESS_TOKEN_KEY, tokens.accessToken);
-        localStorage.setItem(REFRESH_TOKEN_KEY, tokens.refreshToken);
-
         // If user data is provided, use it
         if (userData) {
           localStorage.setItem(USER_DATA_KEY, JSON.stringify(userData));
           setUser(userData);
         } else {
-          // Otherwise, fetch user data from API
+          // Otherwise, fetch user data from API (validates cookie)
           await fetchUserData();
         }
       } catch (error) {
-        console.error("Failed to save auth data:", error);
-        // If fetching user data fails, clear tokens
-        localStorage.removeItem(ACCESS_TOKEN_KEY);
-        localStorage.removeItem(REFRESH_TOKEN_KEY);
+        console.error("Failed to validate authentication:", error);
         throw error;
       }
     },
     [fetchUserData]
   );
 
-  // Logout function
+  // Logout function - clear local data (server will handle cookie removal)
   const logout = useCallback(() => {
-    // Clear storage
-    localStorage.removeItem(ACCESS_TOKEN_KEY);
-    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    // Clear local storage
     localStorage.removeItem(USER_DATA_KEY);
 
     // Clear state

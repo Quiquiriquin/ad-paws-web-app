@@ -15,6 +15,13 @@ export const USER_QUERY = gql`
       id
       email
       name
+      company {
+        id
+        name
+        uuid
+        logoUrl
+        ownerId
+      }
     }
   }
 `;
