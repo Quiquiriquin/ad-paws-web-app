@@ -7,13 +7,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-  PopoverAnchor,
 } from "@/components/ui/popover";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
 import { useFormField } from "./FormField";
 import { cn } from "@/lib/utils";
 
@@ -30,7 +24,7 @@ interface FormDatePickerProps {
 }
 
 export const FormDatePicker = React.forwardRef<
-  HTMLInputElement,
+  HTMLButtonElement,
   FormDatePickerProps
 >(
   (
@@ -50,53 +44,54 @@ export const FormDatePicker = React.forwardRef<
     const { error, formItemId, formDescriptionId, formMessageId } =
       useFormField();
     const [open, setOpen] = React.useState(false);
-    const inputRef = React.useRef<HTMLInputElement>(null);
-
-    // Merge refs
-    React.useImperativeHandle(ref, () => inputRef.current as HTMLInputElement);
 
     const handleSelect = (date: Date | undefined) => {
       onChange?.(date);
       setOpen(false);
-      // Return focus to input after selection
-      inputRef.current?.focus();
-    };
-
-    const handleFocus = () => {
-      if (!disabled) {
-        setOpen(true);
-      }
     };
 
     const displayValue = value ? format(value, dateFormat, { locale }) : "";
 
     return (
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverAnchor asChild>
-          <InputGroup className={cn(error && "border-destructive", className)}>
-            <InputGroupAddon align="inline-start">
-              <CalendarIcon className="h-4 w-4" />
-            </InputGroupAddon>
-            <PopoverTrigger asChild>
-              <InputGroupInput
-                ref={inputRef}
-                id={formItemId}
-                readOnly
-                disabled={disabled}
-                placeholder={placeholder}
-                value={displayValue}
-                onFocus={handleFocus}
-                aria-describedby={
-                  !error
-                    ? `${formDescriptionId}`
-                    : `${formDescriptionId} ${formMessageId}`
-                }
-                aria-invalid={!!error}
-                className="cursor-pointer"
-              />
-            </PopoverTrigger>
-          </InputGroup>
-        </PopoverAnchor>
+        <PopoverTrigger asChild>
+          <button
+            ref={ref}
+            type="button"
+            id={formItemId}
+            disabled={disabled}
+            aria-describedby={
+              !error
+                ? `${formDescriptionId}`
+                : `${formDescriptionId} ${formMessageId}`
+            }
+            aria-invalid={!!error}
+            className={cn(
+              // Base input styles
+              "flex w-full items-center gap-2 rounded-md border px-3 py-2 text-sm text-left",
+              "h-9 min-w-0 shadow-xs transition-[color,box-shadow] outline-none",
+              // Colors matching input
+              "bg-[#F9FAFB] border-[#F3F4F6]",
+              "dark:bg-input/30 dark:border-input",
+              // Focus states
+              "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+              // Error states
+              "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+              // Disabled states
+              "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
+              // Placeholder color when no value
+              !value && "text-[#9CA3AF]",
+              // Cursor
+              "cursor-pointer",
+              className
+            )}
+          >
+            <CalendarIcon className="h-4 w-4 shrink-0 text-[#9CA3AF]" />
+            <span className="flex-1 truncate">
+              {displayValue || placeholder}
+            </span>
+          </button>
+        </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
           <Calendar
             mode="single"

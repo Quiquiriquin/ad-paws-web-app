@@ -86,7 +86,7 @@ const HotelQuickForm = () => {
                 <FormLabel>Fecha de Entrada</FormLabel>
                 <FormControl>
                   <FormDatePicker
-                    placeholder="Selecciona fecha de entrada"
+                    placeholder="Selecciona"
                     value={field.value}
                     onChange={field.onChange}
                     minDate={new Date()}
@@ -108,7 +108,7 @@ const HotelQuickForm = () => {
                 <FormLabel>Fecha de Salida</FormLabel>
                 <FormControl>
                   <FormDatePicker
-                    placeholder="Selecciona fecha de salida"
+                    placeholder="Selecciona"
                     value={field.value}
                     onChange={field.onChange}
                     minDate={checkInDate || new Date()}
