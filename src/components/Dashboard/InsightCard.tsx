@@ -1,6 +1,7 @@
 import React from "react";
 import AdPawsCard from "../AdPawsCard";
 import type { LucideIcon } from "lucide-react";
+import clsx from "clsx";
 
 interface InsightCardProps {
   title: string;
@@ -11,6 +12,7 @@ interface InsightCardProps {
   iconBackgroundColor?: string;
   iconColor?: string;
   iconFill?: string;
+  className?: string;
 }
 
 const InsightCard: React.FC<InsightCardProps> = ({
@@ -22,9 +24,12 @@ const InsightCard: React.FC<InsightCardProps> = ({
   iconBackgroundColor = "#E4F0E4",
   iconColor = "#80AF80",
   iconFill = "#80AF80",
+  className,
 }) => {
   return (
-    <AdPawsCard className="hover:shadow-md hover:cursor-pointer">
+    <AdPawsCard
+      className={clsx("hover:shadow-md hover:cursor-pointer", className)}
+    >
       <div className="flex flex-row justify-between">
         <div className="flex flex-col justify-between gap-4">
           <p className="text-base text-light">{title}</p>
