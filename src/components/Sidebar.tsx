@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import Logo from "./Logo";
 import { Button } from "./ui/button";
 import {
+  DogIcon,
   HomeIcon,
   LogOutIcon,
   MenuIcon,
@@ -62,6 +63,12 @@ export default function Sidebar({
             icon={UserIcon}
             label="Perfil"
             to="/perfil"
+            isCollapsed={isCollapsed}
+          />
+          <SidebarNavLink
+            icon={DogIcon}
+            label="Visitantes perrunos"
+            to="/visitantes-perrunos"
             isCollapsed={isCollapsed}
           />
           <SidebarNavLink

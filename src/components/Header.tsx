@@ -4,12 +4,7 @@ import { Button } from "./ui/button";
 
 const Header = () => {
   return (
-    <div
-      className="h-[80px] bg-white flex items-center justify-between px-6"
-      style={{
-        borderBottom: "1px solid #E4F0E4",
-      }}
-    >
+    <div className="shrink-0 h-[80px] bg-white/60 backdrop-blur-md flex items-center justify-between px-6 sticky top-0 z-10 border-b border-[#E4F0E4]/50">
       <InputGroup className="bg-[#F5F9F2] max-w-[384px]">
         <InputGroupInput placeholder="Buscar huéspedes, dueños o servicios" />
         <InputGroupAddon align="inline-start">
