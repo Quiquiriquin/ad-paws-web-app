@@ -15,13 +15,18 @@ import { useQuery } from "@apollo/client/react";
 import type { Dog } from "@/types/Dog";
 import PetCardSkeleton from "@/components/PetCardSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
+import { GET_GUEST_STATS } from "@/lib/api/stats.api";
+import type { GuestsStats } from "@/types/Stats";
+import { formatAgeFromBirthDate } from "@/lib/utils";
 
 const Guests = () => {
   const { company } = useAuth();
   const { data, loading } = useQuery<{ companyDogs: Dog[] }>(COMPANY_DOGS, {
     variables: { companyId: Number(company?.id) },
   });
-
+  const { data: statsData, loading: statsLoading } = useQuery<{
+    guestsStats: GuestsStats;
+  }>(GET_GUEST_STATS);
   return (
     <div className="h-full px-6 py-4 overflow-auto">
       <div className="flex justify-between items-center mb-8">
@@ -51,7 +56,7 @@ const Guests = () => {
         </div>
       </div>
 
-      {loading && (
+      {statsLoading && (
         <div className="grid grid-cols-4 gap-4 mb-8">
           <div className="flex rounded-md">
             <Skeleton className="w-full h-10 rounded-md" />
@@ -67,11 +72,11 @@ const Guests = () => {
           </div>
         </div>
       )}
-      {!loading && (
+      {!statsLoading && (
         <div className="grid grid-cols-4 gap-4 mb-8">
           <MiniInsightCard
             title="Peks registrados"
-            data="1,248"
+            data={statsData?.guestsStats?.totalDogs || 0}
             mainIcon={PawPrintIcon}
             iconBackgroundColor="#F5F0E8"
             iconColor="#8B7355"
@@ -79,7 +84,7 @@ const Guests = () => {
           />
           <MiniInsightCard
             title="Check-In hoy"
-            data="24"
+            data={statsData?.guestsStats?.todayCheckedInDogs || 0}
             mainIcon={CheckIcon}
             iconBackgroundColor="#E4F0E4"
             iconColor="#4CAF50"
@@ -87,7 +92,7 @@ const Guests = () => {
           />
           <MiniInsightCard
             title="Vacunas vencidas"
-            data="8"
+            data={statsData?.guestsStats?.pastDueVaccines || 0}
             mainIcon={SyringeIcon}
             iconBackgroundColor="#FCE4E4"
             iconColor="#E57373"
@@ -95,7 +100,7 @@ const Guests = () => {
           />
           <MiniInsightCard
             title="NUEVOS ESTE MES"
-            data="15"
+            data={statsData?.guestsStats?.newDogsDuringMonth || 0}
             mainIcon={StarIcon}
             iconBackgroundColor="#EFF6FF"
             iconColor="#C5DAEF"
@@ -112,17 +117,11 @@ const Guests = () => {
             ))
           : data?.companyDogs?.map((dog: Dog) => (
               <PetCard
+                key={dog.id}
+                dogId={dog.id || undefined}
                 name={dog.name}
                 breed={dog.breed}
-                age={
-                  dog.ageYears > 0
-                    ? `${dog.ageYears}a ${
-                        dog.ageMonths > 0 ? `${dog.ageMonths} m` : ""
-                      }`
-                    : dog.ageMonths > 0
-                    ? `${dog.ageMonths} m`
-                    : "S/D"
-                }
+                age={formatAgeFromBirthDate(dog.birthDate)}
                 weight={`${dog.weight}kg`}
                 sex={dog.gender || "Male"}
                 imageUrl={dog.imageUrl || ""}

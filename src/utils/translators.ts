@@ -2,9 +2,7 @@ import type { DogFormValues } from "@/components/Form/Forms/ClientSignupStep2For
 
 export const translateDogFormToBody = (dog: DogFormValues, ownerId: number) => {
   return {
-    ageYears: parseInt(dog.ageYears),
-    ageMonths: parseInt(dog.ageMonths),
-
+    birthDate: dog.birthDate,
     ownerId: ownerId,
     size: dog.size as "SMALL" | "MEDIUM" | "LARGE" | "GIGANTIC",
     gender: dog.gender as "Male" | "Female",

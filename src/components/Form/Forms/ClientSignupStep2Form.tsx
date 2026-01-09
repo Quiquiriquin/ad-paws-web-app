@@ -26,8 +26,7 @@ export interface DogFormValues {
   size: "small" | "medium" | "large" | "xlarge" | "";
   gender: "male" | "female" | "";
   weight: string;
-  ageYears: string;
-  ageMonths: string;
+  birthDate: string;
 }
 
 interface SizeOption {
@@ -66,8 +65,7 @@ const emptyDogValues: Omit<DogFormValues, "id"> = {
   size: "",
   gender: "",
   weight: "",
-  ageYears: "",
-  ageMonths: "",
+  birthDate: "",
 };
 
 const generateId = () => Math.random().toString(36).substring(2, 9);
@@ -352,60 +350,26 @@ const ClientSignupStep2Form = ({
             />
           </div>
 
-          {/* Age - Years and Months */}
-          <div className="flex gap-3 w-full">
-            <FormField
-              name="ageYears"
-              rules={{
-                pattern: {
-                  value: /^\d*$/,
-                  message: "Ingresa un número válido",
-                },
-              }}
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel>Edad</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      inputMode="numeric"
-                      placeholder="Años"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              name="ageMonths"
-              rules={{
-                pattern: {
-                  value: /^\d*$/,
-                  message: "Ingresa un número válido",
-                },
-                max: {
-                  value: 11,
-                  message: "Máximo 11 meses",
-                },
-              }}
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel className="invisible">Meses</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      inputMode="numeric"
-                      placeholder="Meses"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          {/* Birth Date */}
+          <FormField
+            name="birthDate"
+            rules={{
+              required: "La fecha de nacimiento es requerida",
+            }}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Fecha de nacimiento</FormLabel>
+                <FormControl>
+                  <Input
+                    type="date"
+                    max={new Date().toISOString().split("T")[0]}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </FieldSet>
 
         {/* Add another dog button */}

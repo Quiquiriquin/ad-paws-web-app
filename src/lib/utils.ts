@@ -6,6 +6,61 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
+ * Calculate age in years and months from a birth date
+ * @param birthDate - ISO-8601 date string or Date object
+ * @returns Object with years and months
+ */
+export function calculateAge(birthDate: string | Date): {
+  years: number;
+  months: number;
+} {
+  const birth = new Date(birthDate);
+  const today = new Date();
+
+  let years = today.getFullYear() - birth.getFullYear();
+  let months = today.getMonth() - birth.getMonth();
+
+  if (months < 0) {
+    years--;
+    months += 12;
+  }
+
+  // Adjust if the day hasn't occurred yet this month
+  if (today.getDate() < birth.getDate()) {
+    months--;
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+  }
+
+  return { years: Math.max(0, years), months: Math.max(0, months) };
+}
+
+/**
+ * Format age from a birth date as a human-readable string
+ * @param birthDate - ISO-8601 date string or Date object
+ * @returns Formatted age string like "2a 3m", "6m", or "S/D" if invalid
+ */
+export function formatAgeFromBirthDate(birthDate: string | Date | null | undefined): string {
+  if (!birthDate) return "S/D";
+
+  try {
+    const { years, months } = calculateAge(birthDate);
+
+    if (years > 0) {
+      return months > 0 ? `${years}a ${months}m` : `${years}a`;
+    }
+    if (months > 0) {
+      return `${months}m`;
+    }
+    return "< 1m";
+  } catch {
+    return "S/D";
+  }
+}
+
+/**
  * Get the time of day in Spanish based on the current hour or a provided hour
  * @param hour - Optional hour (0-23). If not provided, uses current hour
  * @returns "mañana" (morning), "tarde" (afternoon), or "noche" (evening/night)

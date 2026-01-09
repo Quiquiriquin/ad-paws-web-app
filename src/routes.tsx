@@ -6,6 +6,7 @@ import { PublicRoute } from "./components/PublicRoute";
 import Dashboard from "./pages/dashboard/Dashboard";
 import DashboardLayout from "./layouts/DashboardLayout";
 import Guests from "./pages/guests/Guests";
+import DogProfile from "./pages/guests/DogProfile";
 import Owners from "./pages/owners/Owners";
 import Services from "./pages/services/Services";
 import ClientSignup from "./pages/authentication/ClientSignup";
@@ -44,6 +45,10 @@ export const routes = createBrowserRouter([
       {
         path: "",
         Component: Guests,
+      },
+      {
+        path: ":dogId",
+        Component: DogProfile,
       },
     ],
   },

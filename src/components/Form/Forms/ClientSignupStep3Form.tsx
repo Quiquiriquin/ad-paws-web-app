@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
-import { DOG_BREEDS } from "@/lib/utils";
+import { DOG_BREEDS, formatAgeFromBirthDate } from "@/lib/utils";
 import type { ClientSignupStep1Values } from "./ClientSignupStep1Form";
 import type { DogFormValues } from "./ClientSignupStep2Form";
 
@@ -23,17 +23,6 @@ const genderLabels: Record<string, string> = {
 const dogGenderLabels: Record<string, string> = {
   Male: "Macho",
   Female: "Hembra",
-};
-
-const formatAge = (years: string, months: string): string => {
-  const y = parseInt(years) || 0;
-  const m = parseInt(months) || 0;
-
-  const parts: string[] = [];
-  if (y > 0) parts.push(`${y}a`);
-  if (m > 0) parts.push(`${m}m`);
-
-  return parts.length > 0 ? parts.join(" ") : "0m";
 };
 
 const ClientSignupStep3Form = ({
@@ -123,7 +112,7 @@ const ClientSignupStep3Form = ({
                       dog.breed}
                   </p>
                   <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
-                    <span>{formatAge(dog.ageYears, dog.ageMonths)}</span>
+                    <span>{formatAgeFromBirthDate(dog.birthDate)}</span>
                     <span className="text-border">•</span>
                     <span>{dogGenderLabels[dog.gender] || dog.gender}</span>
                     <span className="text-border">•</span>

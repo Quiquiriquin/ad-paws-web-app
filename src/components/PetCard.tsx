@@ -1,11 +1,14 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import AdPawsCard from "./AdPawsCard";
 import { Button } from "./ui/button";
 import { MarsIcon, MessageSquareIcon, VenusIcon } from "lucide-react";
 import clsx from "clsx";
 import type { Gender } from "@/types/Dog";
+import { DOG_BREEDS } from "@/lib/utils";
 
 interface PetCardProps {
+  dogId?: string;
   name: string;
   breed: string;
   age: string;
@@ -26,6 +29,7 @@ const SexIcon: React.FC<{ sex: Gender }> = ({ sex }) => {
 };
 
 const PetCard: React.FC<PetCardProps> = ({
+  dogId,
   name,
   breed,
   age,
@@ -37,6 +41,16 @@ const PetCard: React.FC<PetCardProps> = ({
   onMessage,
   className,
 }) => {
+  const navigate = useNavigate();
+
+  const handleViewProfile = () => {
+    if (onViewProfile) {
+      onViewProfile();
+    } else if (dogId) {
+      navigate(`/visitantes-perrunos/${dogId}`);
+    }
+  };
+
   return (
     <AdPawsCard className={clsx("!p-0 overflow-hidden w-full", className)}>
       {/* Pet Image */}
@@ -61,7 +75,9 @@ const PetCard: React.FC<PetCardProps> = ({
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
             {name}
           </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400">{breed}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            {DOG_BREEDS[breed as keyof typeof DOG_BREEDS] || breed}
+          </p>
         </div>
 
         {/* Stats */}
@@ -98,7 +114,7 @@ const PetCard: React.FC<PetCardProps> = ({
             variant="outline"
             size="lg"
             className="flex-1 rounded-md border-[#E4F0E4] text-gray-700 dark:text-white hover:bg-[#E4F0E4]/50 dark:hover:bg-gray-500/50"
-            onClick={onViewProfile}
+            onClick={handleViewProfile}
           >
             Ver perfil
           </Button>

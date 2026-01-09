@@ -7,24 +7,33 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Mail, Phone, SquarePen, Trash2 } from "lucide-react";
+import type { UserStatus } from "@/types/Dog";
 
-export type OwnerStatus = "Active" | "Pending Payment" | "Inactive";
+export interface OwnerReservation {
+  id: number;
+  createdAt: string;
+}
 
-export interface Pet {
-  name: string;
+export interface OwnerDog {
+  id: string;
+  imageUrl: string | null;
+  reservations: OwnerReservation[];
   breed: string;
-  imageUrl: string;
+  color: string;
+  name: string;
+  size: string;
+  weight: number;
+  gender: string;
+  birthDate: string;
 }
 
 export interface Owner {
   id: string;
-  name: string;
-  avatarUrl: string;
+  profilePicture: string | null;
   email: string;
   phone: string;
-  pets: Pet[];
-  status: OwnerStatus;
-  lastVisit: string;
+  dogs: OwnerDog[];
+  status: UserStatus;
 }
 
 interface OwnersTableProps {
@@ -33,18 +42,40 @@ interface OwnersTableProps {
   onDelete?: (owner: Owner) => void;
 }
 
-const getStatusStyles = (status: OwnerStatus) => {
+const getStatusStyles = (status: UserStatus) => {
   switch (status) {
-    case "Active":
+    case "ACTIVE":
       return "bg-[#E4F0E4] text-[#2E7D32]";
-    case "Pending Payment":
-      return "bg-[#FFF8E1] text-[#F9A825] border border-[#F9A825]";
-    case "Inactive":
+    case "INACTIVE":
       return "bg-[#F5F5F5] text-[#757575]";
+    case "BLOCKED":
+      return "bg-[#FFEBEE] text-[#C62828]";
+    case "INCOMPLETE":
+      return "bg-[#FFF8E1] text-[#F9A825] border border-[#F9A825]";
+    case "DELETED":
+      return "bg-[#FFCDD2] text-[#B71C1C]";
     default:
       return "bg-gray-100 text-gray-600";
   }
 };
+
+const getLastVisit = (dogs: OwnerDog[]): string => {
+  const allReservations = dogs.flatMap((dog) => dog.reservations);
+  if (allReservations.length === 0) return "Sin visitas";
+
+  const mostRecent = allReservations.reduce((latest, current) =>
+    new Date(current.createdAt) > new Date(latest.createdAt) ? current : latest
+  );
+
+  return new Date(mostRecent.createdAt).toLocaleDateString("es-MX", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
+
+const DEFAULT_AVATAR =
+  "https://ui-avatars.com/api/?background=8B7355&color=fff&name=";
 
 const OwnersTable = ({ data, onEdit, onDelete }: OwnersTableProps) => {
   return (
@@ -54,22 +85,22 @@ const OwnersTable = ({ data, onEdit, onDelete }: OwnersTableProps) => {
           <TableHeader className="sticky top-0 bg-white dark:bg-gray-700 z-10">
             <TableRow className="border-b border-gray-100 hover:bg-transparent">
               <TableHead className="text-xs text-[#6B7280] dark:text-gray-100 font-medium uppercase tracking-wider py-4 px-6">
-                Owner Name
+                Propietario
               </TableHead>
               <TableHead className="text-xs text-[#6B7280] dark:text-gray-100 font-medium uppercase tracking-wider py-4 px-4">
-                Contact Info
+                Contacto
               </TableHead>
               <TableHead className="text-xs text-[#6B7280] dark:text-gray-100 font-medium uppercase tracking-wider py-4 px-4">
-                Pets
+                Mascotas
               </TableHead>
               <TableHead className="text-xs text-[#6B7280] dark:text-gray-100 font-medium uppercase tracking-wider py-4 px-4">
-                Status
+                Estado
               </TableHead>
               <TableHead className="text-xs text-[#6B7280] dark:text-gray-100 font-medium uppercase tracking-wider py-4 px-4">
-                Last Visit
+                Última visita
               </TableHead>
               <TableHead className="text-xs text-[#6B7280] dark:text-gray-100 font-medium uppercase tracking-wider py-4 px-4 text-center">
-                Actions
+                Acciones
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -79,20 +110,31 @@ const OwnersTable = ({ data, onEdit, onDelete }: OwnersTableProps) => {
                 key={`${owner.id}-${index}`}
                 className="border-b border-gray-50 dark:border-gray-500 hover:bg-gray-50/50 dark:hover:bg-gray-500/50"
               >
-                {/* Owner Name */}
+                {/* Owner */}
                 <TableCell className="py-4 px-6">
                   <div className="flex items-center gap-3">
                     <div className="relative">
                       <img
-                        src={owner.avatarUrl}
-                        alt={owner.name}
+                        src={
+                          owner.profilePicture ||
+                          `${DEFAULT_AVATAR}${encodeURIComponent(
+                            owner.email.charAt(0).toUpperCase()
+                          )}`
+                        }
+                        alt={owner.email}
                         className="w-12 h-12 rounded-full object-cover ring-2 ring-offset-2 ring-[#8B7355]/20"
                       />
-                      <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-[#4CAF50] rounded-full border-2 border-white" />
+                      <div
+                        className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${
+                          owner.status === "ACTIVE"
+                            ? "bg-[#4CAF50]"
+                            : "bg-[#9CA3AF]"
+                        }`}
+                      />
                     </div>
                     <div>
                       <p className="font-semibold text-[#1F2937] dark:text-white">
-                        {owner.name}
+                        {owner.email}
                       </p>
                       <p className="text-sm text-[#9CA3AF] dark:text-gray-300">
                         ID: #{owner.id}
@@ -115,30 +157,41 @@ const OwnersTable = ({ data, onEdit, onDelete }: OwnersTableProps) => {
                   </div>
                 </TableCell>
 
-                {/* Pets */}
+                {/* Dogs */}
                 <TableCell className="py-4 px-4">
                   <div className="flex items-center">
-                    <div className="flex -space-x-2">
-                      {owner.pets.map((pet, petIndex) => (
-                        <img
-                          key={petIndex}
-                          src={pet.imageUrl}
-                          alt={pet.name}
-                          className="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-gray-500"
-                        />
-                      ))}
-                      {/* {owner.pets.length > 1 && (
-                        <div className="w-10 h-10 rounded-full bg-[#F3F4F6] border-2 border-white flex items-center justify-center text-xs font-medium text-[#6B7280]">
-                          +
+                    {owner.dogs.length > 0 ? (
+                      <>
+                        <div className="flex -space-x-2">
+                          {owner.dogs.slice(0, 3).map((dog) => (
+                            <img
+                              key={dog.id}
+                              src={
+                                dog.imageUrl ||
+                                `https://ui-avatars.com/api/?background=D4C4B0&color=8B7355&name=🐕`
+                              }
+                              alt={`Dog ${dog.id}`}
+                              className="w-10 h-10 rounded-full object-cover border-2 border-white dark:border-gray-500"
+                            />
+                          ))}
+                          {owner.dogs.length > 3 && (
+                            <div className="w-10 h-10 rounded-full bg-[#F3F4F6] dark:bg-gray-600 border-2 border-white dark:border-gray-500 flex items-center justify-center text-xs font-medium text-[#6B7280] dark:text-gray-300">
+                              +{owner.dogs.length - 3}
+                            </div>
+                          )}
                         </div>
-                      )} */}
-                    </div>
-                    <div className="ml-3">
-                      <p className="text-sm text-[#4B5563] dark:text-gray-300">
-                        {owner.pets.map((p) => p.name).join(", ")}
-                        {owner.pets.length === 1 && ` (${owner.pets[0].breed})`}
+                        <div className="ml-3">
+                          <p className="text-sm text-[#4B5563] dark:text-gray-300">
+                            {owner.dogs.length}{" "}
+                            {owner.dogs.length === 1 ? "mascota" : "mascotas"}
+                          </p>
+                        </div>
+                      </>
+                    ) : (
+                      <p className="text-sm text-[#9CA3AF] dark:text-gray-400">
+                        Sin mascotas
                       </p>
-                    </div>
+                    )}
                   </div>
                 </TableCell>
 
@@ -156,7 +209,7 @@ const OwnersTable = ({ data, onEdit, onDelete }: OwnersTableProps) => {
                 {/* Last Visit */}
                 <TableCell className="py-4 px-4">
                   <span className="text-[#4B5563] dark:text-gray-300">
-                    {owner.lastVisit}
+                    {getLastVisit(owner.dogs)}
                   </span>
                 </TableCell>
 
