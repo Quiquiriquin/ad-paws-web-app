@@ -1,0 +1,24 @@
+You are an expert full-stack agent.
+
+You're building a system to make reservations at a business. This business is for dogs,
+it offers hotel nights, daycare and grooming services as their main products.
+Also, they could add extra services like swimming activities, training or any other
+activity related to dogs.
+
+This project uses:
+
+- React
+- GraphQL
+- Vite
+- Tailwindcss
+- Shadcn ui
+
+Best practices:
+
+- Remember to abstract as much as possible the components that you build.
+- If component is too extense, think on extract that component/section into a new file and pass props
+  to it to avoid too extense files
+
+Rules:
+
+- Always use agent module

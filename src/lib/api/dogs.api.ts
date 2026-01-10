@@ -68,3 +68,28 @@ export const CREATE_USER_DOGS = gql`
     }
   }
 `;
+
+export const UPDATE_DOG = gql`
+  mutation UpdateDog($input: UpdateDogInput!) {
+    updateDog(input: $input) {
+      id
+      name
+      breed
+      birthDate
+      gender
+      color
+      weight
+      size
+      imageUrl
+      owner {
+        id
+        email
+        name
+        lastname
+        phone
+        profilePicture
+        status
+      }
+    }
+  }
+`;

@@ -6,6 +6,7 @@ import { MarsIcon, MessageSquareIcon, VenusIcon } from "lucide-react";
 import clsx from "clsx";
 import type { Gender } from "@/types/Dog";
 import { DOG_BREEDS } from "@/lib/utils";
+import noPhotoDog from "@/assets/no_photo_dog.png";
 
 interface PetCardProps {
   dogId?: string;
@@ -55,16 +56,24 @@ const PetCard: React.FC<PetCardProps> = ({
     <AdPawsCard className={clsx("!p-0 overflow-hidden w-full", className)}>
       {/* Pet Image */}
       <div className="relative aspect-[4/3] w-full max-h-[284px]">
-        <img src={imageUrl} alt={name} className="w-full h-full object-cover" />
-        {/* Owner Avatar */}
-        {ownerAvatarUrl && (
-          <div className="absolute -bottom-8 right-6">
-            <img
-              src={ownerAvatarUrl}
-              alt="Owner"
-              className="w-16 h-16 rounded-full border-2 border-white object-cover shadow-sm"
-            />
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={name}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50">
+            <img src={noPhotoDog} alt={name} className="w-[86px] h-[86px]" />
+            <span className="text-gray-400 text-sm mt-2">Sin foto</span>
           </div>
+        )}
+        {ownerAvatarUrl && (
+          <img
+            src={ownerAvatarUrl}
+            alt="Owner"
+            className="absolute -bottom-8 right-6 w-16 h-16 rounded-full border-2 border-white object-cover shadow-sm"
+          />
         )}
       </div>
 
