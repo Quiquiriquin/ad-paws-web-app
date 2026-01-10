@@ -12,13 +12,13 @@ import { ThemeProvider } from "./contexts/ThemeContext.tsx";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider>
-      <NiceModal.Provider>
-        <ApolloProvider client={apolloClient}>
-          <AuthProvider>
+      <ApolloProvider client={apolloClient}>
+        <AuthProvider>
+          <NiceModal.Provider>
             <RouterProvider router={routes} />
-          </AuthProvider>
-        </ApolloProvider>
-      </NiceModal.Provider>
+          </NiceModal.Provider>
+        </AuthProvider>
+      </ApolloProvider>
     </ThemeProvider>
   </StrictMode>
 );
